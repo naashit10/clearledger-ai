@@ -1,0 +1,6 @@
+bucket,invoices,amount_usd,sort
+Current,597,20100050,1
+1-30 days,119,5008010,2
+31-60 days,119,4954685,3
+61-90 days,119,5053084,4
+90+ days,41,1836868,5
