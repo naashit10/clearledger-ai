@@ -1,0 +1,274 @@
+{
+  "generated_at": "2026-11-08T01:00:44.712006",
+  "headline": {
+    "auto_match_rate_pct": 82.5,
+    "total_recon_items": 5824,
+    "unmatched_breaks": 1019,
+    "classified_exceptions": 1516,
+    "open_ap_value": 64470628.3,
+    "overdue_ap_value": 28287926.52,
+    "avg_days_to_pay": 34.9,
+    "ic_mismatches": 298,
+    "anomalies_flagged": 1199,
+    "gl_entries_processed": 60000,
+    "assumed_minutes_per_match": 1.5,
+    "manual_effort_saved_hours_total": 120.0,
+    "manual_effort_saved_hours_per_month": 7.1
+  },
+  "match_trend": [
+    {
+      "period": "2025-01",
+      "total": 336,
+      "matched": 280,
+      "match_rate": 83.3
+    },
+    {
+      "period": "2025-02",
+      "total": 338,
+      "matched": 274,
+      "match_rate": 81.1
+    },
+    {
+      "period": "2025-03",
+      "total": 398,
+      "matched": 320,
+      "match_rate": 80.4
+    },
+    {
+      "period": "2025-04",
+      "total": 326,
+      "matched": 272,
+      "match_rate": 83.4
+    },
+    {
+      "period": "2025-05",
+      "total": 344,
+      "matched": 279,
+      "match_rate": 81.1
+    },
+    {
+      "period": "2025-06",
+      "total": 376,
+      "matched": 321,
+      "match_rate": 85.4
+    },
+    {
+      "period": "2025-07",
+      "total": 320,
+      "matched": 265,
+      "match_rate": 82.8
+    },
+    {
+      "period": "2025-08",
+      "total": 356,
+      "matched": 291,
+      "match_rate": 81.7
+    },
+    {
+      "period": "2025-09",
+      "total": 333,
+      "matched": 268,
+      "match_rate": 80.5
+    },
+    {
+      "period": "2025-10",
+      "total": 339,
+      "matched": 285,
+      "match_rate": 84.1
+    },
+    {
+      "period": "2025-11",
+      "total": 325,
+      "matched": 259,
+      "match_rate": 79.7
+    },
+    {
+      "period": "2025-12",
+      "total": 352,
+      "matched": 298,
+      "match_rate": 84.7
+    },
+    {
+      "period": "2026-01",
+      "total": 329,
+      "matched": 278,
+      "match_rate": 84.5
+    },
+    {
+      "period": "2026-02",
+      "total": 338,
+      "matched": 282,
+      "match_rate": 83.4
+    },
+    {
+      "period": "2026-03",
+      "total": 357,
+      "matched": 286,
+      "match_rate": 80.1
+    },
+    {
+      "period": "2026-04",
+      "total": 332,
+      "matched": 275,
+      "match_rate": 82.8
+    },
+    {
+      "period": "2026-05",
+      "total": 325,
+      "matched": 272,
+      "match_rate": 83.7
+    }
+  ],
+  "entity_summary": [
+    {
+      "entity": "AMX-IN-01",
+      "total": 1161,
+      "matched": 945,
+      "match_rate": 81.4
+    },
+    {
+      "entity": "AMX-IN-02",
+      "total": 1171,
+      "matched": 952,
+      "match_rate": 81.3
+    },
+    {
+      "entity": "AMX-SG-01",
+      "total": 1157,
+      "matched": 963,
+      "match_rate": 83.2
+    },
+    {
+      "entity": "AMX-UK-01",
+      "total": 1163,
+      "matched": 975,
+      "match_rate": 83.8
+    },
+    {
+      "entity": "AMX-US-01",
+      "total": 1172,
+      "matched": 970,
+      "match_rate": 82.8
+    }
+  ],
+  "break_distribution": {
+    "BANK_CHARGES": 800,
+    "TIMING_DIFFERENCE": 294,
+    "MISSING_IN_BANK": 219,
+    "AMOUNT_MISMATCH": 203
+  },
+  "gl_monthly": [
+    {
+      "period": "2025-01",
+      "entries": 3577,
+      "total_value": 243521752.92
+    },
+    {
+      "period": "2025-02",
+      "entries": 3230,
+      "total_value": 235757352.3
+    },
+    {
+      "period": "2025-03",
+      "entries": 3569,
+      "total_value": 263064501.13
+    },
+    {
+      "period": "2025-04",
+      "entries": 3420,
+      "total_value": 242107419.37
+    },
+    {
+      "period": "2025-05",
+      "entries": 3503,
+      "total_value": 250186233.1
+    },
+    {
+      "period": "2025-06",
+      "entries": 3608,
+      "total_value": 268286087.33
+    },
+    {
+      "period": "2025-07",
+      "entries": 3583,
+      "total_value": 265462073.07
+    },
+    {
+      "period": "2025-08",
+      "entries": 3635,
+      "total_value": 265486815.66
+    },
+    {
+      "period": "2025-09",
+      "entries": 3574,
+      "total_value": 266554791.9
+    },
+    {
+      "period": "2025-10",
+      "entries": 3611,
+      "total_value": 267559608.59
+    },
+    {
+      "period": "2025-11",
+      "entries": 3497,
+      "total_value": 270234993.84
+    },
+    {
+      "period": "2025-12",
+      "entries": 3607,
+      "total_value": 258268472.87
+    },
+    {
+      "period": "2026-01",
+      "entries": 3632,
+      "total_value": 269939145.88
+    },
+    {
+      "period": "2026-02",
+      "entries": 3343,
+      "total_value": 246018379.75
+    },
+    {
+      "period": "2026-03",
+      "entries": 3568,
+      "total_value": 272047772.08
+    },
+    {
+      "period": "2026-04",
+      "entries": 3526,
+      "total_value": 240493241.35
+    },
+    {
+      "period": "2026-05",
+      "entries": 3517,
+      "total_value": 263194307.62
+    }
+  ],
+  "ap_aging": [
+    {
+      "bucket": "CURRENT",
+      "invoice_count": 597,
+      "amount": 35310709.37
+    },
+    {
+      "bucket": "1-30",
+      "invoice_count": 119,
+      "amount": 8278374.39
+    },
+    {
+      "bucket": "31-60",
+      "invoice_count": 119,
+      "amount": 7652064.79
+    },
+    {
+      "bucket": "61-90",
+      "invoice_count": 119,
+      "amount": 10531897.98
+    },
+    {
+      "bucket": "90+",
+      "invoice_count": 41,
+      "amount": 2697581.77
+    }
+  ]
+}
