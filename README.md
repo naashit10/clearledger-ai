@@ -1,23 +1,23 @@
-# ClearLedger AI: Financial Reconciliation & Reporting Automation
+# ClearLedger AI: Financial Reconciliation and Reporting Automation
 
-> An end-to-end **GenAI-powered financial reconciliation system** that automates GL-to-bank matching, classifies reconciliation breaks using LLMs, detects anomalous journal entries with machine learning, and auto-generates month-end close reporting.
+A Python and SQL project that matches general ledger entries to bank statements, classifies the breaks it can't match, screens journal entries for anomalies with machine learning, and drafts the month-end close report. All data is synthetic (see the note at the bottom).
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue) ![SQL](https://img.shields.io/badge/SQL-MySQL-orange) ![ML](https://img.shields.io/badge/ML-IsolationForest-green) ![GenAI](https://img.shields.io/badge/GenAI-Claude%20API-purple) ![PowerBI](https://img.shields.io/badge/Dashboard-Power%20BI%20%2B%20HTML-yellow)
 
 ---
 
-## Business Problem
+## Why this exists
 
-Finance teams at large enterprises spend **hundreds of analyst-hours every month** manually reconciling general ledger entries against bank statements, investigating breaks, and preparing close commentary. This project automates that workflow end-to-end:
+Finance teams spend many analyst-hours each month matching ledger entries to bank statements, chasing down breaks, and writing close commentary. This project automates each of those steps:
 
-| Manual Process | ClearLedger AI |
+| Done by hand today | Done here |
 |---|---|
-| Analyst matches GL ↔ bank line by line | 3-tier matching engine (exact → timing → fuzzy) |
-| Breaks investigated one by one | GenAI classifies root cause automatically |
-| Suspicious entries found by sampling | Isolation Forest scans 100% of journals |
-| Close commentary written manually | Auto-generated management narrative |
+| Analyst matches GL to bank line by line | A three-tier matching engine: exact, then timing, then fuzzy |
+| Breaks are investigated one at a time | Each break gets a root-cause label and a one-line rationale |
+| Suspicious entries are found by sampling | Isolation Forest scores every journal |
+| Close commentary is written manually | A script drafts the management narrative |
 
-**Impact (simulated environment): 82.5% auto-match rate · ~120 analyst-hours avoided over 17 months (~7/month, assuming 1.5 min of manual work per match) · 100% journal population screened for anomalies**
+On the simulated data the engine auto-matches 82.5% of items. At an assumed 1.5 minutes of manual work per match, that is about 120 analyst-hours saved over 17 months, or roughly 7 a month. All 60,000 journals are screened for anomalies.
 
 ---
 
@@ -36,7 +36,7 @@ Finance teams at large enterprises spend **hundreds of analyst-hours every month
                   └──────────────────┘   └───────────────────────┘
 ```
 
-## Repository Structure
+## Repository structure
 
 ```
 clearledger-ai/
@@ -46,124 +46,115 @@ clearledger-ai/
 │   ├── vendor_invoices.csv        # 9,000 AP invoices
 │   └── intercompany_transactions.csv  # 4,000 IC transactions
 ├── scripts/
-│   ├── 01_generate_data.py        # Realistic data simulation
+│   ├── 01_generate_data.py        # Data simulation
 │   ├── 02_reconciliation_engine.py # 3-tier matching algorithm
 │   ├── 03_genai_break_classifier.py # LLM-assisted classification
 │   ├── 04_anomaly_detection.py    # Isolation Forest screening
 │   ├── 05_reporting_automation.py # Close pack generation
-│   └── 06_export_dashboard_data.py # Aggregated tables for the dashboard / BI tools
+│   └── 06_export_dashboard_data.py # Aggregated tables for the dashboard and BI tools
 ├── sql/
-│   └── analytics_queries.sql      # 8 production-grade queries (CTEs, window functions)
+│   └── analytics_queries.sql      # 8 queries (CTEs, window functions)
 ├── dashboard/
 │   ├── clearledger_dashboard.html    # Self-contained interactive dashboard (no server needed)
 │   └── data/                      # Dashboard tables (CSV) for Power BI / Tableau import
-├── outputs/                       # Generated reports & results
+├── outputs/                       # Generated reports and results
 └── docs/
-    └── powerbi_guide.md           # Power BI data model + DAX measures
+    └── powerbi_guide.md           # Power BI data model and DAX measures
 ```
 
 ---
 
-## Key Components
+## How it works
 
-### 1. Three-Tier Reconciliation Engine (`02_reconciliation_engine.py`)
-- **Tier 1, exact:** journal reference + amount + value date
-- **Tier 2, timing:** equal amounts within a ±5-day window
-- **Tier 3, fuzzy:** amount within configurable tolerance (bank charges, partial settlements)
-- Bidirectional break detection: GL-only items AND bank-only items
+### 1. Reconciliation engine (`02_reconciliation_engine.py`)
+Matching runs in three passes, each on what the previous one left over:
+- Exact: journal reference, amount and value date all agree.
+- Timing: equal amounts within a ±5-day window.
+- Fuzzy: amounts within a configurable tolerance, which catches bank charges and partial settlements.
 
-### 2. GenAI Break Classification (`03_genai_break_classifier.py`)
-- Claude API integration with structured-JSON prompting
-- Classifies breaks: `TIMING_DIFFERENCE` · `BANK_CHARGES` · `MISSING_IN_GL` · `MISSING_IN_BANK` · `AMOUNT_MISMATCH` · `DUPLICATE_POSTING`
-- Generates one-line investigation rationale per break for analyst handoff
-- Note: the bundled results in `outputs/` were produced by the rule-based fallback; set `ANTHROPIC_API_KEY` to use the LLM path
-- **Graceful degradation:** deterministic rule-based fallback runs without an API key
+Breaks are found in both directions, so it reports GL-only items and bank-only items.
 
-### 3. ML Anomaly Surveillance (`04_anomaly_detection.py`)
-- Isolation Forest over engineered features: weekend postings, manual JEs, round amounts, rare-user activity, log-scaled amounts
-- Flags 2% highest-risk journal population for audit review, replacing random sampling
+### 2. Break classification (`03_genai_break_classifier.py`)
+The script calls the Claude API with a structured-JSON prompt and sorts each break into one of `TIMING_DIFFERENCE`, `BANK_CHARGES`, `MISSING_IN_GL`, `MISSING_IN_BANK`, `AMOUNT_MISMATCH` or `DUPLICATE_POSTING`. It also writes a one-line rationale an analyst can pick up. Without an API key it falls back to deterministic rules. The results bundled in `outputs/` came from that rule-based path. Set `ANTHROPIC_API_KEY` to use the LLM instead.
 
-### 4. SQL Analytics Library (`sql/analytics_queries.sql`)
-- Match-rate trend with `LAG()` month-over-month deltas
-- Top-N breaks per entity via `ROW_NUMBER()`
-- AP aging with running exposure (`SUM() OVER`)
-- Vendor payment percentile ranking (`PERCENT_RANK()`)
-- Duplicate payment detection, weekend manual-JE audit query
+### 3. Anomaly detection (`04_anomaly_detection.py`)
+An Isolation Forest runs over weekend postings, manual journals, round amounts, rare-user activity and log-scaled amounts. The top 2% by risk score go to audit review, which replaces random sampling.
 
-### 5. Automated Close Reporting (`05_reporting_automation.py`)
-- One-command close pack: KPIs JSON, AP aging, entity scorecards
-- Auto-drafted management commentary (LLM-ready template)
+### 4. SQL library (`sql/analytics_queries.sql`)
+- Match-rate trend with month-over-month change using `LAG()`
+- Top-N breaks per entity using `ROW_NUMBER()`
+- AP aging with running exposure using `SUM() OVER`
+- Vendor payment percentile ranking using `PERCENT_RANK()`
+- Duplicate payment detection and a weekend manual-journal audit query
+
+### 5. Close reporting (`05_reporting_automation.py`)
+One command produces the close pack: a KPI JSON file, AP aging, entity scorecards and a drafted management commentary built from a template that an LLM can fill.
 
 ---
 
 ## Dashboard
 
-**Interactive HTML version** (`dashboard/clearledger_dashboard.html`), a single self-contained file. Open it in any browser, or publish it with GitHub Pages. Select an entity in the scorecard to focus the charts; hover any chart for detail. Money values are USD equivalents at fixed indicative rates.
+The interactive version is `dashboard/clearledger_dashboard.html`, a single file you can open in any browser or publish with GitHub Pages. Click an entity in the scorecard to filter the charts, and hover a chart for detail. Money values are USD equivalents at fixed indicative rates.
 
-**Power BI version:** import the tables in `dashboard/data/` (Get Data → Text/CSV) and see [`docs/powerbi_guide.md`](docs/powerbi_guide.md) for the data model, DAX measures, and page layout.
+For Power BI, import the tables in `dashboard/data/` (Get Data, then Text/CSV). [`docs/powerbi_guide.md`](docs/powerbi_guide.md) covers the data model, DAX measures and page layout.
 
-Headline metrics surfaced:
-- Auto-match rate trend (17 months)
-- Break root-cause distribution (GenAI-classified)
-- Entity-level reconciliation scorecard
-- AP aging exposure with overdue alerting
+It shows the match-rate trend over 17 months, the distribution of break root causes, a reconciliation scorecard per entity, and AP aging with overdue alerts.
 
 ---
 
-## Quick Start
+## Quick start
 
 ```bash
 # Clone and install
-git clone https://github.com/<your-username>/clearledger-ai.git
+git clone https://github.com/naashit10/clearledger-ai.git
 cd clearledger-ai
 pip install pandas numpy scikit-learn
 
 # Run the full pipeline
-python scripts/01_generate_data.py        # builds 78,605-record dataset
+python scripts/01_generate_data.py        # builds the 78,605-record dataset
 python scripts/02_reconciliation_engine.py
 python scripts/03_genai_break_classifier.py
 python scripts/04_anomaly_detection.py
 python scripts/05_reporting_automation.py
 python scripts/06_export_dashboard_data.py   # refreshes dashboard/data/*.csv
 
-# Optional: enable live LLM classification
+# Optional: use the live LLM for classification
 export ANTHROPIC_API_KEY=sk-...
 python scripts/03_genai_break_classifier.py
 ```
 
 ---
 
-## Tech Stack
+## Tech stack
 
 | Layer | Tools |
 |---|---|
 | Data processing | Python (pandas, NumPy) |
-| Matching engine | Custom 3-tier algorithm |
-| GenAI | Claude API (structured JSON prompting, fallback design) |
+| Matching | Custom three-tier algorithm |
+| GenAI | Claude API, with a rule-based fallback |
 | Machine learning | scikit-learn Isolation Forest |
-| Analytics | MySQL-dialect SQL (CTEs, window functions) |
-| Visualization | Power BI (star schema + DAX) · Chart.js HTML dashboard |
+| Analytics | MySQL-dialect SQL |
+| Visualization | Power BI (star schema, DAX) and an HTML dashboard built with d3 |
 
 ---
 
-## Results Summary
+## Results
 
 | Metric | Value |
 |---|---|
 | Records processed | 78,605 |
 | Auto-match rate | 82.5% |
 | Unmatched breaks | 1,019 (800 bank-only, 219 GL-only) |
-| Exceptions classified | 1,516 (1,019 unmatched + 497 matched-with-note) |
-| Journals screened by ML | 60,000 (100% population) |
+| Exceptions classified | 1,516 (1,019 unmatched plus 497 matched with a note) |
+| Journals screened | 60,000, the full population |
 | Anomalies flagged for audit | 1,199 |
-| Estimated analyst-hours avoided | ~120 over 17 months (~7/month; assumes 1.5 min per matched item) |
+| Analyst-hours saved (estimate) | about 120 over 17 months, assuming 1.5 minutes per matched item |
 
 ---
 
 ## Author
 
-**Syed Naashit Hashmi**
-B.Tech CS (AI & ML) · Published GenAI researcher (ITAI 2025)
+Syed Naashit Hashmi, B.Tech in CS (AI & ML). Published a GenAI paper at ITAI 2025.
 [LinkedIn](https://linkedin.com/in/naashithashmi10) · naashith63@gmail.com
 
-> *Note: All data in this repository is synthetically generated to simulate enterprise financial systems. No real financial data is used.*
+All data in this repository is synthetically generated to simulate enterprise financial systems. No real financial data is used.
