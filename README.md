@@ -1,4 +1,4 @@
-# 💠 ClearLedger AI — Financial Reconciliation & Reporting Automation Platform
+# ClearLedger AI: Financial Reconciliation & Reporting Automation
 
 > An end-to-end **GenAI-powered financial reconciliation system** that automates GL-to-bank matching, classifies reconciliation breaks using LLMs, detects anomalous journal entries with machine learning, and auto-generates month-end close reporting.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Business Problem
+## Business Problem
 
 Finance teams at large enterprises spend **hundreds of analyst-hours every month** manually reconciling general ledger entries against bank statements, investigating breaks, and preparing close commentary. This project automates that workflow end-to-end:
 
@@ -21,7 +21,7 @@ Finance teams at large enterprises spend **hundreds of analyst-hours every month
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────┐   ┌──────────────────┐   ┌───────────────────────┐
@@ -36,7 +36,7 @@ Finance teams at large enterprises spend **hundreds of analyst-hours every month
                   └──────────────────┘   └───────────────────────┘
 ```
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 clearledger-ai/
@@ -64,12 +64,12 @@ clearledger-ai/
 
 ---
 
-## ⚙️ Key Components
+## Key Components
 
 ### 1. Three-Tier Reconciliation Engine (`02_reconciliation_engine.py`)
-- **Tier 1 — Exact:** journal reference + amount + value date
-- **Tier 2 — Timing:** equal amounts within a ±5-day window
-- **Tier 3 — Fuzzy:** amount within configurable tolerance (bank charges, partial settlements)
+- **Tier 1, exact:** journal reference + amount + value date
+- **Tier 2, timing:** equal amounts within a ±5-day window
+- **Tier 3, fuzzy:** amount within configurable tolerance (bank charges, partial settlements)
 - Bidirectional break detection: GL-only items AND bank-only items
 
 ### 2. GenAI Break Classification (`03_genai_break_classifier.py`)
@@ -81,7 +81,7 @@ clearledger-ai/
 
 ### 3. ML Anomaly Surveillance (`04_anomaly_detection.py`)
 - Isolation Forest over engineered features: weekend postings, manual JEs, round amounts, rare-user activity, log-scaled amounts
-- Flags 2% highest-risk journal population for audit review — replaces random sampling
+- Flags 2% highest-risk journal population for audit review, replacing random sampling
 
 ### 4. SQL Analytics Library (`sql/analytics_queries.sql`)
 - Match-rate trend with `LAG()` month-over-month deltas
@@ -96,11 +96,11 @@ clearledger-ai/
 
 ---
 
-## 📊 Dashboard
+## Dashboard
 
-**Interactive HTML version** (`dashboard/clearledger_dashboard.html`) — a single self-contained file: open it in any browser, or publish it with GitHub Pages. Select an entity in the scorecard to focus the charts; hover any chart for detail. Money values are USD equivalents at fixed indicative rates.
+**Interactive HTML version** (`dashboard/clearledger_dashboard.html`), a single self-contained file. Open it in any browser, or publish it with GitHub Pages. Select an entity in the scorecard to focus the charts; hover any chart for detail. Money values are USD equivalents at fixed indicative rates.
 
-**Power BI version** — import the tables in `dashboard/data/` (Get Data → Text/CSV) and see [`docs/powerbi_guide.md`](docs/powerbi_guide.md) for the data model, DAX measures, and page layout.
+**Power BI version:** import the tables in `dashboard/data/` (Get Data → Text/CSV) and see [`docs/powerbi_guide.md`](docs/powerbi_guide.md) for the data model, DAX measures, and page layout.
 
 Headline metrics surfaced:
 - Auto-match rate trend (17 months)
@@ -110,7 +110,7 @@ Headline metrics surfaced:
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone and install
@@ -133,7 +133,7 @@ python scripts/03_genai_break_classifier.py
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Layer | Tools |
 |---|---|
@@ -146,7 +146,7 @@ python scripts/03_genai_break_classifier.py
 
 ---
 
-## 📈 Results Summary
+## Results Summary
 
 | Metric | Value |
 |---|---|
@@ -160,7 +160,7 @@ python scripts/03_genai_break_classifier.py
 
 ---
 
-## 👤 Author
+## Author
 
 **Syed Naashit Hashmi**
 B.Tech CS (AI & ML) · Published GenAI researcher (ITAI 2025)
