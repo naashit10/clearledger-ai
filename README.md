@@ -94,6 +94,12 @@ One command produces the close pack: a KPI JSON file, AP aging, entity scorecard
 
 ## Dashboard
 
+![Dashboard: headline metrics, matching performance, exceptions and entity scorecard](docs/dashboard-preview.png)
+
+![Dashboard: anomaly screening, highest-risk journals, payables and intercompany](docs/dashboard-preview-2.png)
+
+Live version: https://naashit10.github.io/clearledger-ai/dashboard/clearledger_dashboard.html
+
 The interactive version is `dashboard/clearledger_dashboard.html`, a single file you can open in any browser or publish with GitHub Pages. Click an entity in the scorecard to filter the charts, and hover a chart for detail. Money values are USD equivalents at fixed indicative rates.
 
 For Power BI, import the tables in `dashboard/data/` (Get Data, then Text/CSV). [`docs/powerbi_guide.md`](docs/powerbi_guide.md) covers the data model, DAX measures and page layout.
